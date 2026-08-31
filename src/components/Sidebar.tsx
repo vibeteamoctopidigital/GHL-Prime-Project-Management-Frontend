@@ -1,0 +1,74 @@
+'use client';
+
+import React, { useState, useEffect } from 'react';
+import { usePathname } from 'next/navigation';
+import { useUser } from './UserContext';
+import { useTheme } from './ThemeProvider';
+import { api, subscribeToChanges } from '@/lib/api';
+
+import SidebarHeader from './_sidebarComponents/SidebarHeader';
+import SidebarNav from './_sidebarComponents/SidebarNav';
+import SidebarUser from './_sidebarComponents/SidebarUser';
+
+interface SidebarProps {
+  isOpen: boolean;
+  onClose: () => void;
+}
+
+export default function Sidebar({ isOpen, onClose }: SidebarProps) {
+  const pathname = usePathname();
+  const { currentUser, logout } = useUser();
+  const { theme, toggleTheme } = useTheme();
+  
+  const [expiringSubs, setExpiringSubs] = useState(0);
+
+  useEffect(() => {
+    if (!currentUser) return;
+
+    // Fetch expiring subscriptions count
+    const fetchExpiring = async () => {
+      if (!['super-admin', 'Admin'].includes(currentUser.role)) return;
+      try {
+        const nextWeek = new Date();
+        nextWeek.setDate(nextWeek.getDate() + 7);
+        const nextWeekStr = nextWeek.toISOString().split('T')[0];
+
+        // Counted in the database rather than by downloading every
+        // subscription and filtering here. The cutoff is still computed
+        // locally, so the date boundary is identical to before.
+        const { count } = await api.subscriptions.expiringCount(nextWeekStr);
+        setExpiringSubs(count);
+      } catch (err) {
+        console.error('Failed to fetch subscriptions', err);
+      }
+    };
+
+    fetchExpiring();
+
+    // The "expiring subscriptions" badge doesn't need 8s freshness (and this
+    // is a perpetual, session-long poll for every Admin/super-admin regardless
+    // of which page they're on). Poll at 60s instead of the default 8s. The
+    // badge still catches up immediately on mount and when the tab regains
+    // focus, so what's displayed is unchanged — just fetched ~7x less often.
+    const unsub = subscribeToChanges(
+      () => {
+        fetchExpiring();
+      },
+      { intervalMs: 60_000 },
+    );
+
+    return () => {
+      unsub();
+    };
+  }, [currentUser]);
+
+  return (
+    <>
+      <aside className={`fixed left-0 top-0 h-screen w-64 bg-white dark:bg-slate-900 border-r border-slate-200 dark:border-slate-700 flex flex-col z-[60] shadow-sm transition-transform duration-300 ease-in-out lg:translate-x-0 ${isOpen ? 'translate-x-0' : '-translate-x-full'}`}>
+        <SidebarHeader onClose={onClose} />
+        <SidebarNav currentUser={currentUser} pathname={pathname} expiringSubs={expiringSubs} onClose={onClose} />
+        <SidebarUser currentUser={currentUser} theme={theme} toggleTheme={toggleTheme} logout={logout} onClose={onClose} />
+      </aside>
+    </>
+  );
+}
