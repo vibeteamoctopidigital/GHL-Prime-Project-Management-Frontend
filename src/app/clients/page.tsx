@@ -15,7 +15,7 @@ export default function ClientsPage() {
   const { loading: userLoading, currentUser } = useUser();
   const router = useRouter();
 
-  const isMember = currentUser?.role === 'Member';
+  const isMember = currentUser?.role === 'team member';
   const canManage = !!currentUser && !isMember;
 
   // Role guard — Members can't access Clients.

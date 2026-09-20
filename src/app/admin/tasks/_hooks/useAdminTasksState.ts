@@ -57,7 +57,7 @@ export function useAdminTasksState() {
   const [taskWorkingHours, setTaskWorkingHours] = useState<Record<string, number>>({});
   const [taskBillingHours, setTaskBillingHours] = useState<Record<string, number>>({});
   
-  const canEditHours = currentUser && ['super-admin', 'Admin', 'Lead'].includes(currentUser.role);
+  const canEditHours = currentUser && ['CEO', 'HR', 'DEPT HEAD', 'Team Lead'].includes(currentUser.role);
 
   const insertHoursDelta = async (taskId: string, deltaHours: number, deltaBilling: number, logDate: string) => {
     if (!currentUser) return false;

@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { Mail, Phone, MapPin, Shield, Star, User, X, CalendarDays } from 'lucide-react';
+import { Mail, Phone, MapPin, Shield, Briefcase, Star, User, X, CalendarDays } from 'lucide-react';
 import type { TeamMember } from '@/lib/types';
 import { getRoleDisplayName } from '@/lib/types';
 import Avatar from '@/components/Avatar';
@@ -46,9 +46,11 @@ export default function MemberDetailModal({ member: selected, onClose }: Props) 
             <div>
               <h2 className="text-xl font-bold text-slate-900">{selected.name}</h2>
               <div className="flex items-center gap-1.5 mt-0.5 text-sm font-semibold text-violet-600 uppercase tracking-wider">
-                {selected.role === 'super-admin' || selected.role === 'Admin' ? (
+                {selected.role === 'HR' ? (
+                  <Briefcase className="w-3.5 h-3.5" />
+                ) : selected.role === 'CEO' || selected.role === 'DEPT HEAD' ? (
                   <Shield className="w-3.5 h-3.5" />
-                ) : selected.role === 'Lead' ? (
+                ) : selected.role === 'Team Lead' ? (
                   <Star className="w-3.5 h-3.5" />
                 ) : (
                   <User className="w-3.5 h-3.5" />

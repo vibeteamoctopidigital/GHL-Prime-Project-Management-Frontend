@@ -378,7 +378,7 @@ export function useProjectState() {
 
   const tasksByStatus = (status: TaskStatus) => tasks.filter(t => t.status === status);
 
-  const isAdmin = currentUser && ['super-admin', 'Admin'].includes(currentUser.role);
+  const isAdmin = currentUser && ['CEO', 'HR', 'DEPT HEAD'].includes(currentUser.role);
   const isProjectLead = project && currentUser && project.project_lead_id === currentUser.id;
   const isAssigned = tasks.some(t => t.assignees?.some(a => a.id === currentUser?.id));
   const hasProjectAccess = isAdmin || isProjectLead || isAssigned;

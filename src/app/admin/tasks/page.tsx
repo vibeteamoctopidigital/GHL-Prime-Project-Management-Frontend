@@ -22,12 +22,12 @@ export default function AdminTasksPage() {
   const showTaskForm = useSelector((state: RootState) => state.adminTaskForm.showTaskForm);
 
   useEffect(() => {
-    if (!userLoading && currentUser?.role === 'Member') {
+    if (!userLoading && currentUser?.role === 'team member') {
       router.replace('/board');
     }
   }, [currentUser, userLoading, router]);
 
-  if (currentUser && currentUser.role === 'Member') {
+  if (currentUser && currentUser.role === 'team member') {
     return (
       <div className="flex items-center justify-center min-h-screen bg-slate-50">
         <div className="text-center animate-pulse">

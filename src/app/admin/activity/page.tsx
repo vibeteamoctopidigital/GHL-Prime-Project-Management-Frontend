@@ -66,7 +66,7 @@ export default function ActivityHistoryPage() {
   };
 
   // Role guard
-  if (!userLoading && currentUser?.role === 'Member') {
+  if (!userLoading && currentUser?.role === 'team member') {
     return (
       <div className="flex items-center justify-center min-h-[60vh]">
         <div className="text-center">

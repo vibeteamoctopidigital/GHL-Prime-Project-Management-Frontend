@@ -16,7 +16,7 @@ export default function SubscriptionsPage() {
   const { currentUser, loading: userLoading } = useUser();
   const router = useRouter();
 
-  const isMember = currentUser?.role === 'Member';
+  const isMember = currentUser?.role === 'team member';
 
   // Role guard
   useEffect(() => {
@@ -74,7 +74,7 @@ export default function SubscriptionsPage() {
     } catch (e) { console.error('Failed to save session', e); }
   }, [showAddModal, newSub, editingSub]);
 
-  if (currentUser && currentUser.role === 'Member') {
+  if (currentUser && currentUser.role === 'team member') {
     return (
       <div className="flex items-center justify-center min-h-screen bg-slate-50">
         <div className="text-center animate-pulse">

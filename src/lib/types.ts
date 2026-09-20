@@ -1,14 +1,46 @@
-export type Role = 'super-admin' | 'Admin' | 'Lead' | 'Member';
+// Hierarchy: CEO > HR > DEPT HEAD > Team Lead > team member.
+// These are the exact values stored in team_members.role, so what the database
+// holds and what the UI shows are the same string — there is no separate
+// display mapping that can drift out of sync.
+export type Role = 'CEO' | 'HR' | 'DEPT HEAD' | 'Team Lead' | 'team member';
 
-export const ROLE_DISPLAY_NAMES: Record<Role, string> = {
-  'super-admin': 'Director',
-  'Admin': 'Manager',
-  'Lead': 'Team Lead',
-  'Member': 'Teammate',
+export const ROLES: Role[] = ['CEO', 'HR', 'DEPT HEAD', 'Team Lead', 'team member'];
+
+// Roles that see the whole organisation. Everyone else is narrowed by the
+// server (see backend/src/utils/scope.ts) — a Team Lead to their own team, a
+// team member to themselves. Mirrored here only to drive UI affordances;
+// the server is what actually enforces it.
+export const ORG_WIDE_ROLES: Role[] = ['CEO', 'HR', 'DEPT HEAD'];
+
+/**
+ * Role label for display. Stored values are already human-readable, so this is
+ * an identity function for current data — it stays only to render any legacy
+ * row (super-admin/Admin/Lead/Member) left over from before the rename.
+ */
+const LEGACY_ROLE_NAMES: Record<string, string> = {
+  'super-admin': 'CEO',
+  Admin: 'DEPT HEAD',
+  Lead: 'Team Lead',
+  Member: 'team member',
 };
 
 export function getRoleDisplayName(role: string): string {
-  return ROLE_DISPLAY_NAMES[role as Role] || role;
+  return LEGACY_ROLE_NAMES[role] || role;
+}
+
+/**
+ * Canonical role for a stored value.
+ *
+ * The API can still hand back a pre-rename role ('super-admin'/'Admin'/'Lead'/
+ * 'Member') until the `rename_roles` migration has run against the database.
+ * Role *checks* therefore must not compare the raw string: normalise it as it
+ * enters the app (see the auth slice) so a legacy row still matches the same
+ * entries a renamed row would — otherwise every `roles.includes(role)` gate,
+ * including the sidebar's nav items, matches nothing.
+ */
+export function normalizeRole(role: string | null | undefined): Role | undefined {
+  if (!role) return undefined;
+  return (LEGACY_ROLE_NAMES[role] ?? role) as Role;
 }
 export type ProjectCategory = 'Marketplace' | 'BDM' | 'Servicing' | 'Internal' | 'Outside';
 export type TaskStatus = 'Todo' | 'Working' | 'On Review' | 'Complete';

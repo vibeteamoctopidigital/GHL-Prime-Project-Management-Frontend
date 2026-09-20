@@ -191,12 +191,12 @@ export default function DashboardPage() {
   }, [userLoading, fetchDashboardData]);
 
   useEffect(() => {
-    if (!userLoading && (currentUser?.role === 'Member' || currentUser?.role === 'Lead')) {
+    if (!userLoading && (currentUser?.role === 'team member' || currentUser?.role === 'Team Lead')) {
       router.replace('/board');
     }
   }, [currentUser, userLoading, router]);
 
-  if (currentUser && (currentUser.role === 'Member' || currentUser.role === 'Lead')) {
+  if (currentUser && (currentUser.role === 'team member' || currentUser.role === 'Team Lead')) {
     return (
       <div className="flex items-center justify-center min-h-screen bg-slate-50 dark:bg-slate-900">
         <div className="text-center animate-pulse">
@@ -294,7 +294,7 @@ export default function DashboardPage() {
             />
           </div>
 
-          {currentUser && ['super-admin', 'Admin'].includes(currentUser.role) && (
+          {currentUser && ['CEO', 'HR', 'DEPT HEAD'].includes(currentUser.role) && (
             <TeamAnalytics />
           )}
         </>

@@ -8,14 +8,12 @@ import ThemeProvider from './ThemeProvider';
 import AppProviders from '@/providers/AppProviders';
 import Sidebar from './Sidebar';
 import { Toaster } from 'sonner';
-import { useTheme } from './ThemeProvider';
-import { Loader2, Menu, Sun, Moon } from 'lucide-react';
+import { Loader2, Menu } from 'lucide-react';
 
 function ProtectedLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const router = useRouter();
   const { currentUser, loading } = useUser();
-  const { theme, toggleTheme } = useTheme();
   const [sidebarOpen, setSidebarOpen] = React.useState(false);
 
   useEffect(() => {
@@ -59,23 +57,21 @@ function ProtectedLayout({ children }: { children: React.ReactNode }) {
             <Menu className="w-6 h-6" />
           </button>
           
-          <div className="h-8 w-32 relative">
+          {/* Served from public/ rather than a remote CDN. */}
+          <div className="h-8 w-36 relative">
             <Image
-              src="https://assets.cdn.filesafe.space/VrTTgjMoHCZk4jeKOm9F/media/6979d241b9c85bad80c220d1.png"
-              alt="Logo"
+              src="/ghl-prime-logo.png"
+              alt="GHL Prime — Project Tracker"
               fill
+              sizes="144px"
               className="object-contain"
               priority
             />
           </div>
 
-          <button
-            onClick={toggleTheme}
-            className="p-2 text-slate-500 dark:text-slate-400 hover:text-amber-500 dark:hover:text-amber-400 hover:bg-amber-50 dark:hover:bg-amber-500/20 rounded-lg transition-all"
-            title={`Switch to ${theme === 'light' ? 'dark' : 'light'} mode`}
-          >
-            {theme === 'light' ? <Moon className="w-5 h-5" /> : <Sun className="w-5 h-5" />}
-          </button>
+          {/* Spacer matching the menu button, so the logo stays centred now
+              that the theme toggle that used to sit here is gone. */}
+          <div className="w-10 shrink-0" aria-hidden="true" />
         </header>
 
         <main className={`flex-1 min-h-screen grid-bg pt-16 lg:pt-0 lg:ml-64 ${sidebarOpen ? 'blur-[2px] lg:blur-0' : ''} transition-all duration-300`} style={{ backgroundColor: 'var(--bg-primary)' }}>

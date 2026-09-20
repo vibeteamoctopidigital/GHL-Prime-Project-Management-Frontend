@@ -59,7 +59,7 @@ export function UserProvider({ children }: { children: ReactNode }) {
     dispatch(setStatus('loading'));
     try {
       const user = await api.auth.me();
-      if (user.is_paused && user.role !== 'super-admin') {
+      if (user.is_paused && user.role !== 'CEO') {
         api.auth.logout();
         dispatch(clearAuth());
         router.replace('/login?paused=true');

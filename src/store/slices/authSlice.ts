@@ -1,5 +1,5 @@
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
-import type { TeamMember } from '@/lib/types';
+import { normalizeRole, type TeamMember } from '@/lib/types';
 
 export type AuthStatus = 'idle' | 'loading' | 'authenticated' | 'unauthenticated';
 
@@ -23,8 +23,12 @@ const authSlice = createSlice({
       state.status = action.payload;
     },
     setUser(state, action: PayloadAction<TeamMember | null>) {
-      state.user = action.payload;
-      state.status = action.payload ? 'authenticated' : 'unauthenticated';
+      // Canonicalise the role on the way in (see normalizeRole): a row created
+      // before the role rename would otherwise match none of the UI's role
+      // lists, leaving e.g. the sidebar with no nav links at all.
+      const user = action.payload;
+      state.user = user ? { ...user, role: normalizeRole(user.role) ?? user.role } : null;
+      state.status = state.user ? 'authenticated' : 'unauthenticated';
     },
     patchUser(state, action: PayloadAction<Partial<TeamMember>>) {
       if (state.user) state.user = { ...state.user, ...action.payload };

@@ -38,11 +38,11 @@ export default function ProjectsPage() {
   const [editingHoursId, setEditingHoursId] = useState<string | null>(null);
   const [editingMetric, setEditingMetric] = useState<'working' | 'billing' | null>(null);
   const [editingHoursValue, setEditingHoursValue] = useState('');
-  const canEditHours = currentUser && ['super-admin', 'Admin', 'Lead'].includes(currentUser.role);
+  const canEditHours = currentUser && ['CEO', 'HR', 'DEPT HEAD', 'Team Lead'].includes(currentUser.role);
 
   // Status editing (admins / managers only)
   const [editingStatusId, setEditingStatusId] = useState<string | null>(null);
-  const canEditStatus = currentUser?.role !== 'Member';
+  const canEditStatus = currentUser?.role !== 'team member';
 
   // Reference stabilization for the 8s poll: reuse prior objects/arrays when
   // nothing changed so the memoized ProjectTable doesn't re-render whole
@@ -66,7 +66,7 @@ export default function ProjectsPage() {
       ]);
 
       let filteredProjects = projData || [];
-      if (currentUser?.role === 'Member') {
+      if (currentUser?.role === 'team member') {
         const myAssignments = await api.taskAssignments.list({ memberId: currentUser.id });
         if (myAssignments && myAssignments.length > 0) {
           const myTaskIds = myAssignments.map((a: any) => a.task_id);
@@ -227,7 +227,7 @@ export default function ProjectsPage() {
     [projects, search, statusFilter, categoryFilter, sortBy, sortDir],
   );
 
-  const isSuperAdminOrLead = currentUser?.role !== 'Member';
+  const isSuperAdminOrLead = currentUser?.role !== 'team member';
   const colSpan = isSuperAdminOrLead ? 10 : 8;
 
   if (loading) {

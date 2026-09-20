@@ -4,8 +4,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { api } from '@/lib/api';
 import { useUser } from '@/components/UserContext';
-import { useTheme } from '@/components/ThemeProvider';
-import { KeyRound, Shield, Loader2, Mail, Ban, Sun, Moon, X } from 'lucide-react';
+import { KeyRound, Loader2, Mail, Ban, X } from 'lucide-react';
 import Image from 'next/image';
 import { toast } from 'sonner';
 
@@ -16,7 +15,6 @@ export default function LoginPage() {
   const [redirecting, setRedirecting] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
   const { currentUser, refreshUser } = useUser();
-  const { theme, toggleTheme } = useTheme();
   const router = useRouter();
   const searchParams = useSearchParams();
   const isPaused = searchParams.get('paused') === 'true';
@@ -41,7 +39,7 @@ export default function LoginPage() {
 
   useEffect(() => {
     if (currentUser) {
-      if (currentUser.role === 'Member' || currentUser.role === 'Lead') {
+      if (currentUser.role === 'team member' || currentUser.role === 'Team Lead') {
         router.push('/board');
       } else {
         router.push('/dashboard');
@@ -117,15 +115,6 @@ export default function LoginPage() {
 
   return (
     <div className="min-h-screen flex items-center justify-center relative overflow-hidden bg-slate-50">
-      {/* Theme toggle */}
-      <button
-        onClick={toggleTheme}
-        className="absolute top-4 right-4 z-20 p-2.5 text-slate-500 dark:text-slate-400 bg-white/70 dark:bg-slate-800/70 backdrop-blur-sm border border-slate-200 dark:border-slate-600 rounded-xl hover:text-amber-500 dark:hover:text-amber-400 hover:border-amber-200 dark:hover:border-amber-500/30 hover:bg-amber-50 dark:hover:bg-amber-500/20 transition-all shadow-sm"
-        title={`Switch to ${theme === 'light' ? 'dark' : 'light'} mode`}
-      >
-        {theme === 'light' ? <Moon className="w-5 h-5" /> : <Sun className="w-5 h-5" />}
-      </button>
-
       {/* Decorative background */}
       <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none">
         <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-violet-500/10 blur-[100px] rounded-full mix-blend-multiply" />
@@ -133,13 +122,16 @@ export default function LoginPage() {
       </div>
 
       <div className="relative z-10 w-full max-w-md p-8 bg-white/70 backdrop-blur-xl border border-white/20 rounded-3xl shadow-2xl">
-        <div className="flex justify-center mb-8">
-          <div className="w-40 h-12 relative flex items-center justify-center">
+        <div className="flex justify-center mb-5">
+          {/* Square mark, so the box is square — a wide container would
+              letterbox it. Served from public/ rather than a remote CDN so the
+              login screen renders without a third-party request. */}
+          <div className="w-20 h-20 relative">
             <Image
-              src="https://assets.cdn.filesafe.space/j53xn6YJHwIdPImV00rn/media/69c3d852c144037c25328132.png"
-              alt="Octopi Digital Logo"
+              src="/logo-icon.png"
+              alt="Octopi Digital"
               fill
-              sizes="(max-width: 768px) 160px, 160px"
+              sizes="80px"
               className="object-contain"
               priority
             />
@@ -147,9 +139,8 @@ export default function LoginPage() {
         </div>
 
         <div className="text-center mb-8">
-          <h1 className="text-2xl font-bold text-slate-900 tracking-tight flex items-center justify-center gap-2">
-            <Shield className="w-5 h-5 text-violet-500" />
-            Ops Command Center
+          <h1 className="text-2xl font-bold text-slate-900 tracking-tight">
+            Octopi Digital
           </h1>
           <p className="text-sm text-slate-500 mt-2">Sign in to your account</p>
         </div>

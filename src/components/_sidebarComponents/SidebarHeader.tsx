@@ -16,10 +16,10 @@ export default function SidebarHeader({ onClose }: SidebarHeaderProps) {
               <div className="absolute -inset-0.5 bg-gradient-to-br from-violet-500 to-cyan-500 rounded-2xl opacity-20 group-hover:opacity-40 blur transition duration-500" />
               <div className="relative w-12 h-12 bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-600 flex items-center justify-center overflow-hidden transition-all duration-300 group-hover:shadow-md group-hover:scale-[1.03]">
                 <Image
-                  src="/logo.png"
-                  alt="logo"
-                  width={32}
-                  height={32}
+                  src="/logo-icon.png"
+                  alt="GHL Prime"
+                  width={40}
+                  height={40}
                   className="object-contain"
                   priority
                 />
@@ -28,7 +28,7 @@ export default function SidebarHeader({ onClose }: SidebarHeaderProps) {
 
             <div className="flex-1 min-w-0">
               <h2 className="text-[11px] font-extrabold text-slate-900 dark:text-slate-100 uppercase tracking-[0.22em] leading-tight">
-                Ops <span className="text-violet-600">Command</span>
+                Project <span className="text-violet-600">Tracker</span>
               </h2>
               <div className="mt-1 inline-flex items-center gap-1.5 px-1.5 py-0.5 rounded-full bg-slate-100/80 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-600">
                 <span className="relative flex w-1.5 h-1.5">

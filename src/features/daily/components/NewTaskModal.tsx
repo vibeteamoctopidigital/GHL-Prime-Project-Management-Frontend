@@ -137,7 +137,7 @@ export default function NewTaskModal({ open, onClose, currentUser, teamMembers }
       if (taskProjectId) taskData.project_id = taskProjectId;
 
       // Members auto-assign themselves; others use selection
-      const assigneeIds = currentUser?.role === 'Member'
+      const assigneeIds = currentUser?.role === 'team member'
         ? (currentUser?.id ? [currentUser.id] : [])
         : taskAssignees;
 
@@ -444,7 +444,7 @@ export default function NewTaskModal({ open, onClose, currentUser, teamMembers }
           </div>
 
           {/* Assign Members */}
-          {currentUser?.role !== 'Member' && (
+          {currentUser?.role !== 'team member' && (
             <div>
               <div className="flex items-center justify-between mb-2">
                 <label className="text-sm font-medium text-slate-700 dark:text-slate-300">Assign Team Members</label>
@@ -463,7 +463,7 @@ export default function NewTaskModal({ open, onClose, currentUser, teamMembers }
                       {m.name.charAt(0)}
                     </div>
                     <span className="flex-1 text-sm font-medium text-slate-800 dark:text-slate-200">{m.name}</span>
-                    <span className="text-xs text-slate-400 dark:text-slate-500">{m.role === 'super-admin' ? 'super-admin' : m.role}</span>
+                    <span className="text-xs text-slate-400 dark:text-slate-500">{m.role === 'CEO' ? 'CEO' : m.role}</span>
                   </label>
                 ))}
               </div>

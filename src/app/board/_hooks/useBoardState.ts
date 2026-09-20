@@ -122,11 +122,11 @@ export function useBoardState() {
   const [refDocId, setRefDocId] = useState('');
   const [loadingDocs, setLoadingDocs] = useState(false);
 
-  const isSuperAdmin = currentUser?.role === 'super-admin';
-  const isMember = currentUser?.role === 'Member';
+  const isSuperAdmin = currentUser?.role === 'CEO';
+  const isMember = currentUser?.role === 'team member';
   // Central "All Members" board + the PDF summary export used to be
   // super-admin only; Leads now get the same board-level controls.
-  const canViewAllMembers = isSuperAdmin || currentUser?.role === 'Lead';
+  const canViewAllMembers = isSuperAdmin || currentUser?.role === 'Team Lead';
 
   // Guards against out-of-order async responses: changing board date / member /
   // project / range while a fetch is in flight must not let an older response
