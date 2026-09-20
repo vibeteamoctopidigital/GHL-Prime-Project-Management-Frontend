@@ -15,7 +15,7 @@ export default function AdminUsersPage() {
   const { currentUser } = useUser();
   const router = useRouter();
 
-  const { data: teamMembers = [] } = useTeamMembers(!!currentUser && currentUser.role !== 'Member');
+  const { data: teamMembers = [] } = useTeamMembers(!!currentUser && currentUser.role !== 'team member');
   const deleteUser = useDeleteUser();
 
   // Deletion state
@@ -28,12 +28,12 @@ export default function AdminUsersPage() {
 
   // Security check - Only super-admin, Admin, and Lead should see this content
   useEffect(() => {
-    if (currentUser && currentUser.role === 'Member') {
+    if (currentUser && currentUser.role === 'team member') {
       router.replace('/board');
     }
   }, [currentUser, router]);
 
-  if (!currentUser || currentUser.role === 'Member') {
+  if (!currentUser || currentUser.role === 'team member') {
     return (
       <div className="p-8 flex items-center justify-center h-[80vh] bg-slate-50">
         <div className="text-center space-y-3 max-w-sm animate-pulse">
@@ -59,19 +59,19 @@ export default function AdminUsersPage() {
     }
 
     // Role guards for deletion
-    if (member.role === 'super-admin' && currentUser.role !== 'super-admin') {
+    if (member.role === 'CEO' && currentUser.role !== 'CEO') {
       toast.error("Only Super Admins can remove other Super Admins.");
       return;
     }
-    if (currentUser.role === 'Lead' && member.role !== 'Member') {
+    if (currentUser.role === 'Team Lead' && member.role !== 'team member') {
        toast.error("Leads can only remove Members.");
        return;
     }
-    if (currentUser.role === 'Lead' && member.managed_by_id !== currentUser.id) {
+    if (currentUser.role === 'Team Lead' && member.managed_by_id !== currentUser.id) {
        toast.error("You can only remove Members you created.");
        return;
     }
-    if (currentUser.role === 'Admin' && member.role === 'Admin') {
+    if (currentUser.role === 'DEPT HEAD' && member.role === 'DEPT HEAD') {
        toast.error("Admins cannot remove other Admins.");
        return;
     }

@@ -22,18 +22,20 @@ import { toast } from 'sonner';
 
 function getRoleColor(role: string) {
   switch (role) {
-    case 'super-admin': return 'text-violet-600';
-    case 'Admin': return 'text-red-500';
-    case 'Lead': return 'text-amber-500';
+    case 'CEO': return 'text-violet-600';
+    case 'HR': return 'text-teal-600';
+    case 'DEPT HEAD': return 'text-red-500';
+    case 'Team Lead': return 'text-amber-500';
     default: return 'text-sky-500';
   }
 }
 
 function getRoleIcon(role: string) {
   switch (role) {
-    case 'super-admin':
-    case 'Admin': return <Shield className="w-3.5 h-3.5" />;
-    case 'Lead': return <Star className="w-3.5 h-3.5" />;
+    case 'HR': return <Briefcase className="w-3.5 h-3.5" />;
+    case 'CEO':
+    case 'DEPT HEAD': return <Shield className="w-3.5 h-3.5" />;
+    case 'Team Lead': return <Star className="w-3.5 h-3.5" />;
     default: return <UserIcon className="w-3.5 h-3.5" />;
   }
 }

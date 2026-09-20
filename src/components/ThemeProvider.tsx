@@ -1,43 +1,48 @@
 'use client';
 
-import React, { createContext, useContext, useEffect, useState } from 'react';
+import React, { createContext, useContext, useEffect } from 'react';
 
-type Theme = 'light' | 'dark';
+// The app is light-mode only. The theme switcher was removed from the login
+// screen, the mobile header and the sidebar, so there is no longer any way to
+// select dark mode.
+//
+// This still runs as a provider (rather than being deleted outright) for two
+// reasons:
+//   1. It actively strips the `dark` class and the stored preference, so
+//      anyone who had dark mode selected before is returned to light instead
+//      of being stuck in a theme they can no longer turn off.
+//   2. `useTheme()` keeps its shape, so any remaining consumer reads a stable
+//      'light' rather than crashing on a missing context.
+//
+// The `dark:` variants scattered through the components are harmless dead
+// styles now — the `dark` class is never applied — and are left in place so
+// this stays a one-file change.
+
+type Theme = 'light';
 
 interface ThemeContextType {
   theme: Theme;
-  toggleTheme: () => void;
 }
 
-const ThemeContext = createContext<ThemeContextType>({
-  theme: 'light',
-  toggleTheme: () => {},
-});
+const ThemeContext = createContext<ThemeContextType>({ theme: 'light' });
 
 export function useTheme() {
   return useContext(ThemeContext);
 }
 
-function getInitialTheme(): Theme {
-  if (typeof window !== 'undefined') {
-    const stored = localStorage.getItem('theme') as Theme | null;
-    if (stored) return stored;
-    return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-  }
-  return 'light';
-}
-
 export default function ThemeProvider({ children }: { children: React.ReactNode }) {
-  const [theme, setTheme] = useState<Theme>(getInitialTheme);
-
   useEffect(() => {
-    const root = document.documentElement;
-    root.classList.toggle('dark', theme === 'dark');
-    localStorage.setItem('theme', theme);
-  }, [theme]);
+    // Clear any dark preference left over from before the switcher was removed.
+    document.documentElement.classList.remove('dark');
+    try {
+      localStorage.removeItem('theme');
+    } catch {
+      /* private mode / storage disabled — the class removal above is what matters */
+    }
+  }, []);
 
   return (
-    <ThemeContext.Provider value={{ theme, toggleTheme: () => setTheme(prev => prev === 'light' ? 'dark' : 'light') }}>
+    <ThemeContext.Provider value={{ theme: 'light' }}>
       {children}
     </ThemeContext.Provider>
   );

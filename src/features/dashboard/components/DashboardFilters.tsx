@@ -57,7 +57,7 @@ export default function DashboardFilters({
   return (
     <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 shrink-0 relative z-[1000] animate-in fade-in slide-in-from-right-4 duration-500">
       {/* Team Member Filter — Admin/Super Admin only */}
-      {currentUser && ['super-admin', 'Admin'].includes(currentUser.role) && teamMembers.length > 0 && (
+      {currentUser && ['CEO', 'HR', 'DEPT HEAD'].includes(currentUser.role) && teamMembers.length > 0 && (
         <div className="relative flex-1 sm:flex-initial">
           <Users className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 pointer-events-none" />
           <select

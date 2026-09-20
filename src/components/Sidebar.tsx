@@ -3,7 +3,6 @@
 import React, { useState, useEffect } from 'react';
 import { usePathname } from 'next/navigation';
 import { useUser } from './UserContext';
-import { useTheme } from './ThemeProvider';
 import { api, subscribeToChanges } from '@/lib/api';
 
 import SidebarHeader from './_sidebarComponents/SidebarHeader';
@@ -18,7 +17,6 @@ interface SidebarProps {
 export default function Sidebar({ isOpen, onClose }: SidebarProps) {
   const pathname = usePathname();
   const { currentUser, logout } = useUser();
-  const { theme, toggleTheme } = useTheme();
   
   const [expiringSubs, setExpiringSubs] = useState(0);
 
@@ -27,7 +25,7 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
 
     // Fetch expiring subscriptions count
     const fetchExpiring = async () => {
-      if (!['super-admin', 'Admin'].includes(currentUser.role)) return;
+      if (!['CEO', 'HR', 'DEPT HEAD'].includes(currentUser.role)) return;
       try {
         const nextWeek = new Date();
         nextWeek.setDate(nextWeek.getDate() + 7);
@@ -67,7 +65,7 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
       <aside className={`fixed left-0 top-0 h-screen w-64 bg-white dark:bg-slate-900 border-r border-slate-200 dark:border-slate-700 flex flex-col z-[60] shadow-sm transition-transform duration-300 ease-in-out lg:translate-x-0 ${isOpen ? 'translate-x-0' : '-translate-x-full'}`}>
         <SidebarHeader onClose={onClose} />
         <SidebarNav currentUser={currentUser} pathname={pathname} expiringSubs={expiringSubs} onClose={onClose} />
-        <SidebarUser currentUser={currentUser} theme={theme} toggleTheme={toggleTheme} logout={logout} onClose={onClose} />
+        <SidebarUser currentUser={currentUser} logout={logout} onClose={onClose} />
       </aside>
     </>
   );

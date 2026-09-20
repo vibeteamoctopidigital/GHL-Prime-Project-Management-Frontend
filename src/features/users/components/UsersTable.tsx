@@ -28,7 +28,7 @@ interface Props {
 export default function UsersTable({ members, currentUser, onRequestDelete }: Props) {
   const [editingId, setEditingId] = useState<string | null>(null);
   const [editName, setEditName] = useState('');
-  const [editRole, setEditRole] = useState<Role>('Member');
+  const [editRole, setEditRole] = useState<Role>('team member');
   const [pausingId, setPausingId] = useState<string | null>(null);
 
   const updateUser = useUpdateUser();
@@ -65,12 +65,12 @@ export default function UsersTable({ members, currentUser, onRequestDelete }: Pr
       return;
     }
 
-    if (currentUser?.role === 'Admin' && (member.role === 'Admin' || member.role === 'super-admin')) {
+    if (currentUser?.role === 'DEPT HEAD' && (member.role === 'DEPT HEAD' || member.role === 'CEO')) {
       toast.error("Admins cannot pause other Admins or Super Admins.");
       return;
     }
 
-    if (currentUser?.role === 'Lead') {
+    if (currentUser?.role === 'Team Lead') {
       toast.error("Leads cannot pause users.");
       return;
     }
@@ -190,7 +190,7 @@ export default function UsersTable({ members, currentUser, onRequestDelete }: Pr
                     <span className="text-[10px] text-violet-500 font-semibold">System Admin</span>
                   ) : (
                     <div className="flex items-center justify-end gap-1">
-                      {(currentUser?.role === 'super-admin' || currentUser?.role === 'Admin') && (
+                      {(currentUser?.role === 'CEO' || currentUser?.role === 'DEPT HEAD') && (
                         <button
                           onClick={() => handlePauseToggle(member)}
                           disabled={pausingId === member.id}
@@ -211,8 +211,8 @@ export default function UsersTable({ members, currentUser, onRequestDelete }: Pr
                         </button>
                       )}
                       {/* Leads can only remove the Members they created */}
-                      {(member.role !== 'super-admin' || currentUser?.role === 'super-admin') &&
-                        (currentUser?.role !== 'Lead' || member.managed_by_id === currentUser.id) && (
+                      {(member.role !== 'CEO' || currentUser?.role === 'CEO') &&
+                        (currentUser?.role !== 'Team Lead' || member.managed_by_id === currentUser.id) && (
                         <button
                           onClick={() => onRequestDelete(member)}
                           className="p-1.5 rounded-lg text-slate-400 lg:opacity-0 lg:group-hover:opacity-100 hover:text-red-500 hover:bg-red-50 transition-all"

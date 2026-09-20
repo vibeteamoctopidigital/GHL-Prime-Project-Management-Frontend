@@ -73,7 +73,7 @@ const TaskCardComponent = ({ task, onStatusChange, onHoursLogged, onDropTask, on
   // Assignee management state (Director & Team Lead only)
   const [editAssigneeIds, setEditAssigneeIds] = useState<string[]>([]);
   const [assigneeSearch, setAssigneeSearch] = useState('');
-  const canManageAssignees = ['super-admin', 'Lead'].includes(currentUser?.role || '');
+  const canManageAssignees = ['CEO', 'Team Lead'].includes(currentUser?.role || '');
 
   // Avatar modal
   const [avatarModal, setAvatarModal] = useState<{
@@ -154,7 +154,7 @@ const TaskCardComponent = ({ task, onStatusChange, onHoursLogged, onDropTask, on
   // Admins and super-admin may delete any task, which the old assignee-only
   // check wrongly hid from them.
   const canDeleteTask =
-    (currentUser?.role !== 'Member' || !!isOwnTask) && !isLockedComplete;
+    (currentUser?.role !== 'team member' || !!isOwnTask) && !isLockedComplete;
 
   const currentIndex = TASK_STATUSES.indexOf(displayStatus);
   const canMoveForward = currentIndex < TASK_STATUSES.length - 1 && !isLockedComplete;

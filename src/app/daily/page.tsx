@@ -44,7 +44,7 @@ export default function DailyPlannerPage() {
             Your active tasks, organized by deadline. Focus on what is due today.
           </p>
         </div>
-        {currentUser && currentUser.role !== 'Member' && (
+        {currentUser && currentUser.role !== 'team member' && (
           <button
             onClick={() => setShowNewTaskModal(true)}
             className="flex items-center gap-2 px-4 py-2.5 bg-violet-600 text-white rounded-xl text-sm font-medium hover:bg-violet-700 transition-colors shadow-md shadow-violet-200 active:scale-95 shrink-0"

@@ -14,12 +14,13 @@ const inter = Inter({
 export const dynamic = 'force-dynamic';
 
 export const metadata: Metadata = {
-  title: "Operations Command Center | GHL prime",
-  description: "Real-time operations tracking and Kanban system for Octopi Digital's AI & Automation Team",
+  title: "Project Tracker | GHL Prime",
+  description: "Real-time project tracking and Kanban system for the GHL Prime team",
+  // Served from public/ so the tab icon doesn't depend on a third-party CDN.
   icons: {
-    icon: "https://assets.cdn.filesafe.space/j53xn6YJHwIdPImV00rn/media/69c3d85205117b94ac44014e.png",
-    shortcut: "https://assets.cdn.filesafe.space/j53xn6YJHwIdPImV00rn/media/69c3d85205117b94ac44014e.png",
-    apple: "https://assets.cdn.filesafe.space/j53xn6YJHwIdPImV00rn/media/69c3d85205117b94ac44014e.png",
+    icon: "/logo-icon.png",
+    shortcut: "/logo-icon.png",
+    apple: "/logo-icon.png",
   },
 };
 
@@ -31,21 +32,10 @@ export default function RootLayout({
   return (
     <html lang="en" className={inter.className} suppressHydrationWarning>
       <body className="min-h-screen antialiased">
-        <script dangerouslySetInnerHTML={{
-          __html: `
-            (function() {
-              try {
-                var theme = localStorage.getItem('theme');
-                if (!theme) {
-                  theme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-                }
-                if (theme === 'dark') {
-                  document.documentElement.classList.add('dark');
-                }
-              } catch(e) {}
-            })();
-          `
-        }} />
+        {/* The pre-hydration theme script that used to live here applied a
+            `dark` class from localStorage / prefers-color-scheme before React
+            booted. The app is light-only now, so it would have flashed dark
+            for anyone on a dark-mode OS before the provider could correct it. */}
         <ClientLayout>{children}</ClientLayout>
       </body>
     </html>

@@ -16,7 +16,7 @@ export default function AddUserModal({ currentUser }: Props) {
   const [newName, setNewName] = useState('');
   const [newEmail, setNewEmail] = useState('');
   const [newPassword, setNewPassword] = useState('');
-  const [newRole, setNewRole] = useState<Role>('Member');
+  const [newRole, setNewRole] = useState<Role>('team member');
   const [successMsg, setSuccessMsg] = useState('');
   const [errorMsg, setErrorMsg] = useState('');
   const [loading, setLoading] = useState(false);
@@ -61,7 +61,7 @@ export default function AddUserModal({ currentUser }: Props) {
       setNewName('');
       setNewEmail('');
       setNewPassword('');
-      setNewRole('Member');
+      setNewRole('team member');
       if (successTimerRef.current) clearTimeout(successTimerRef.current);
       successTimerRef.current = setTimeout(() => {
         setSuccessMsg('');
